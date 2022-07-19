@@ -127,3 +127,14 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# data
+input_data/*.xlsx
+output_data/deltalake
+output_data/hudi
+output_data/iceberg
+metastore_db
+
+.DS_Store
+src/data_processing_hudi.py
+docker-compose.yml
