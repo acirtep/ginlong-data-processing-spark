@@ -1,5 +1,6 @@
 # ginlong-data-processing-spark
 Data processing of Solis inverter data with Spark
+
 This repo is created especially for the electricity data downloaded from Ginlong.
 If you want to use other kind of data make sure to change the data transformation code, 
 in order to accomodate your use case.
