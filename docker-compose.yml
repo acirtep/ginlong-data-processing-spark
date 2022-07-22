@@ -1,0 +1,62 @@
+version: '3.2'
+
+services:
+
+  postgres_db:
+    image: postgres:12.0
+    privileged: true
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=changethis
+      - POSTGRES_DB=metastore
+      - POSTGRES_HOST_AUTH_METHOD=md5
+    ports:
+      - 5432:5432
+    networks:
+      - app-tier
+  
+  pyspark_app:
+    restart: on-failure
+    depends_on: 
+      - postgres_db
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - app-tier
+    links:
+      - postgres_db:postgres_db
+    environment:
+      - HIVE_HOME=/opt/hive
+      - HADOOP_HOME=/opt/hadoop
+      - PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/hadoop:/opt/hadoop/bin:/opt/hive:/bin:/usr/bin:.
+      - JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-amd64
+      - PYTHONPATH=/app/src
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=changethis
+      - POSTGRES_DB=metastore
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - type: bind
+        source: ./input_data
+        target: /app/input_data
+      - type: bind
+        source: ./output_data
+        target: /app/output_data
+      - type: bind
+        source: ./metastore_db/hive_conf/hive-site.xml
+        target: /opt/hive/conf/hive-site.xml
+      - type: bind
+        source: ./src
+        target: /app/src
+    command:
+      - bash
+      - -c
+      - |
+        /opt/hive/bin/schematool -dbType postgres -initSchema --verbose
+        /opt/hive/bin/hive --service metastore --hiveconf hive.root.logger=INFO,console
+
+networks:
+  app-tier:
+    driver: bridge
+      
