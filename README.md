@@ -12,7 +12,6 @@ Pre-requisite: docker and docker-compose
 2. Run services `docker-compose up`
 3. Start ipython by: `docker exec -it ginlong-data-processing-spark_pyspark_app_1 ipython`
 and checkout the spark scripts.
-- Execute spark code `python /app/src/data_processing_spark.py`
 - Execute spark code with hive `python /app/src/data_processing_spark_hive.py`
 
 Do not forget to clean up your system with docker rm, rmi or even prune!
