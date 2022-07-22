@@ -4,7 +4,7 @@ Data processing of Solis inverter data with Spark
 This repo is created especially for the electricity data downloaded from Ginlong.
 If you want to use other kind of data make sure to change the data transformation code, 
 in order to accomodate your use case.
-This is just a show-case repo for Apache Spark.
+This is just a show-case repo for Apache Spark and the code used for the articles written at https://ownyourdata.ai/wp/tag/spark/.
 
 Pre-requisite: docker and docker-compose
 
