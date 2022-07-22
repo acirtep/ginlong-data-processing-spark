@@ -6,12 +6,13 @@ If you want to use other kind of data make sure to change the data transformatio
 in order to accomodate your use case.
 This is just a show-case repo for Apache Spark.
 
-1. Create the image `docker build . -t ginlong-data-processing-spark`
-2. Access image bash
-```
-docker run \
---mount type=bind,source=$(pwd)/input_data,target=/app/input_data \
---mount type=bind,source=$(pwd)/output_data,target=/app/output_data \
--it ginlong-data-processing-spark bash
-```
-3. Execute spark code `python data_processing_spark.py`
+Pre-requisite: docker and docker-compose
+
+1. Create services `docker-compose build`
+2. Run services `docker-compose up`
+3. Start ipython by: `docker exec -it ginlong-data-processing-spark_pyspark_app_1 ipython`
+and checkout the spark scripts.
+- Execute spark code `python /app/src/data_processing_spark.py`
+- Execute spark code with hive `python /app/src/data_processing_spark_hive.py`
+
+Do not forget to clean up your system with docker rm, rmi or even prune!

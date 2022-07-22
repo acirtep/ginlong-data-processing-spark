@@ -10,8 +10,7 @@ def get_spark_session():
     Returns:
         SparkSession: spark session with the spark-excel package
     """
-    return SparkSession.builder.appName(
-        "My Spark ETL Session").config(
+    return SparkSession.builder.appName("My Spark ETL Session").config(
         'spark.jars.packages', 'com.crealytics:spark-excel_2.12:3.2.1_0.17.0'
     ).getOrCreate()
 
@@ -92,11 +91,6 @@ if __name__ == "__main__":
     spark_session = get_spark_session()
     input_df = get_raw_electricity_data(spark_session, "*")
     data_to_be_saved = data_transformation(input_df)
-
-
-    data_to_be_saved.write.mode('overwrite').parquet(
-        '/app/output_data/default_spark/full_electricity/'
-    )
 
     data_to_be_saved.write.mode('overwrite').partitionBy('reporting_date').parquet(
         '/app/output_data/default_spark/full_electricity/'
