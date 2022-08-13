@@ -133,6 +133,7 @@ input_data/*.xlsx
 output_data/deltalake
 output_data/hudi
 output_data/iceberg
+output_data/default_spark
 
 .DS_Store
 src/data_processing_hudi.py
