@@ -4,7 +4,8 @@ from datetime import date, datetime, timedelta
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StringType, StructField, StructType, DateType, TimestampType, DoubleType
 
-import random
+import random 
+
 
 def get_spark_session():
     """
@@ -50,15 +51,17 @@ def get_some_df(spark_session):
 
 
 def spark_overwrite(spark_session, table_name, input_df):
-    spark_session.sql(f"drop table {table_name}")
+    spark_session.sql(f"drop table if exists {table_name}")
     input_df.write.saveAsTable(table_name)
 
 
 def save_raw_data(spark_session):
+    input_df = get_some_df(spark_session)
     spark_overwrite(
         spark_session=spark_session, 
         table_name='raw_electricity_data',
-        input_df=get_some_df(spark_session))
+        input_df=input_df
+    )
 
 
 def save_agg_data(spark_session): 
@@ -74,3 +77,42 @@ def save_agg_data(spark_session):
     )
 
 
+def save_altered_agg_data(spark_session):
+    altered_agg_df = spark_session.sql(
+        "select reporting_date, \
+            produced_kwh, \
+            (max_unix_timestamp - min_unix_timestamp)/60/60 as no_active_hours \
+        from (select to_date(time, 'yyyy-MM-dd') as reporting_date, \
+            max(produced_kwh) produced_kwh, \
+            min(unix_timestamp(time)) as min_unix_timestamp, \
+            max(unix_timestamp(time)) as max_unix_timestamp \
+        from raw_electricity_data group by 1) src"
+    )
+    spark_overwrite(
+        spark_session=spark_session, 
+        table_name='altered_daily_electricity_agg',
+        input_df=altered_agg_df
+    )
+
+
+def create_view(spark_session):
+    spark_session.sql(
+        "create or replace view daily_electricity_agg_v as \
+        select reporting_date, produced_kwh, null as no_active_hours from daily_electricity_agg \
+        union all \
+        select reporting_date, produced_kwh, no_active_hours from altered_daily_electricity_agg"
+    )
+
+
+if __name__ == "__main__":
+    spark_session = get_spark_session()
+    spark_session.sparkContext.setLogLevel('ERROR')
+    print("Loading raw data...")
+    save_raw_data(spark_session)
+    print("Loading agg data...")
+    save_agg_data(spark_session)
+    print("Loading altered agg data...")
+    save_altered_agg_data(spark_session)
+    print("Creating view...")
+    create_view(spark_session)
+    print(spark_session.sql('select * from daily_electricity_agg_v').show())
