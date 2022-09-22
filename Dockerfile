@@ -6,11 +6,9 @@ RUN apt-get update && \
       apt-get -y install libpq-dev python3-dev gcc \
       wget procps tar less vim sudo gnupg gnupg2 gnupg1 software-properties-common iputils-ping
 
-RUN wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | sudo apt-key add -
-
-RUN sudo add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/
-
-RUN sudo apt-get update && sudo apt-get -y install adoptopenjdk-8-hotspot
+RUN apt-add-repository 'deb http://security.debian.org/debian-security stretch/updates main'
+RUN apt-get update
+RUN apt -y install openjdk-8-jdk openjdk-8-jre
 
 RUN wget --quiet https://downloads.apache.org/hive/hive-3.1.2/apache-hive-3.1.2-bin.tar.gz
 RUN wget --quiet https://dlcdn.apache.org/hadoop/common/hadoop-3.3.1/hadoop-3.3.1.tar.gz
@@ -31,7 +29,7 @@ EXPOSE 10001
 WORKDIR app/
 
 COPY src src
-RUN pip install pyspark==3.2.1
+RUN pip install pyspark==3.3.0
 RUN pip install pandas
 RUN pip install ipython
 RUN pip install openpyxl

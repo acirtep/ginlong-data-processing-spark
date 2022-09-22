@@ -10,9 +10,17 @@ Pre-requisite: docker and docker-compose
 
 1. Create services `docker-compose build`
 2. Run services `docker-compose up`
-3. Start ipython by: `docker exec -it ginlong-data-processing-spark_pyspark_app_1 ipython`
+3. Start ipython by: `docker exec -it pyspark_hive ipython`
 and checkout the spark scripts.
 - Execute spark code with hive `python /app/src/data_processing_spark_hive.py`
 - Execute spark code for schema changes `python /app/src/data_processing_spark_schema.py`
+
+
+# For ACID tests:
+- Apache Hudi: `python src/acid/data_processing_acid_hudi.py `
+- Apache Iceberg: `python src/acid/data_processing_acid_iceberg.py`
+- Delta Lake: ` python src/acid/data_processing_acid_delta.py `
+- Default Spark: ` python src/acid/data_processing_acid_default_spark.py `
+
 
 Do not forget to clean up your system with docker rm, rmi or even prune!
