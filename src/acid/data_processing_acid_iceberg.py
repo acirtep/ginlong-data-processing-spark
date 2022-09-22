@@ -50,7 +50,7 @@ def create_table():
     spark_session.sql(
         "CREATE or REPLACE TABLE iceberg_acid_example (  \
             time timestamp,  \
-            produced_kwh decimal,  \
+            produced_kwh decimal(18,2),  \
             reporting_date date, \
             reporting_month string ) \
         USING iceberg \
