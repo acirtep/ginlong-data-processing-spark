@@ -34,3 +34,4 @@ RUN pip install pandas
 RUN pip install ipython
 RUN pip install openpyxl
 RUN pip install faker
+RUN pip install delta-spark

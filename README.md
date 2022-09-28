@@ -22,5 +22,8 @@ and checkout the spark scripts.
 - Delta Lake: ` python src/acid/data_processing_acid_delta.py `
 - Default Spark: ` python src/acid/data_processing_acid_default_spark.py `
 
+# For time traveling
+Make sure to load data and use the methods from data_processing_time_traveling.py
+
 
 Do not forget to clean up your system with docker rm, rmi or even prune!
