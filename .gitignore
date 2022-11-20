@@ -142,3 +142,4 @@ src/data_processing_hudi.py
 scratch.py
 
 output_data/acid_example
+/output_data/nessie/

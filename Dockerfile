@@ -35,3 +35,5 @@ RUN pip install ipython
 RUN pip install openpyxl
 RUN pip install faker
 RUN pip install delta-spark
+RUN pip install pynessie
+RUN pip install findspark

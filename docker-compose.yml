@@ -20,6 +20,7 @@ services:
     container_name: pyspark_hive
     depends_on: 
       - postgres_db
+      - nessie
     build:
       context: .
       dockerfile: Dockerfile
@@ -50,12 +51,24 @@ services:
       - type: bind
         source: ./src
         target: /app/src
+      - type: bind
+        source: ./.git
+        target: /app/.git
     command:
       - bash
       - -c
       - |
         /opt/hive/bin/schematool -dbType postgres -initSchema --verbose
         /opt/hive/bin/hive --service metastore --hiveconf hive.root.logger=INFO,console
+        nessie config --add endpoint http://0.0.0.0:19120/api/v1
+
+  nessie:
+    image: projectnessie/nessie
+    networks:
+      - app-tier
+    ports:
+      - "19120:19120"
+
 
 networks:
   app-tier:
